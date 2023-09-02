@@ -52,7 +52,7 @@ const config = {
 
     // 轮播参数
     play: {
-        interval: 1,     // 切换页面时间间隔，秒
-        clickDelay: 5,   // 自动轮播延时， 秒
+        interval: 3,     // 切换页面时间间隔，秒
+        clickDelay: 10,   // 自动轮播延时， 秒
     }
 }
