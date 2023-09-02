@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>状态栏</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-size: 2vh;
+        overflow: hidden;
+      }
+      #bg-box {
+        position: absolute;
+        top: -1em;
+        bottom: -1em;
+        right: -1em;
+        left: -1em;
+        z-index: -999;
+        background-image: url("./背景图.jpg");
+        background-size: cover;
+        filter: blur(0.5em);
+      }
+      #custom-page {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 99;
+        background-color: #fff;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        height: 12vh;
+        border-bottom: #fff solid 1vh;
+        box-sizing: border-box;
+        background-color: rgb(0, 0, 128, 0.6);
+      }
+      #control {
+        position: absolute;
+        left: 5%;
+        top: 3%;
+        opacity: 0;
+        z-index: 999;
+      }
+      #control:hover {
+        opacity: 1;
+      }
+      #control button {
+        font-size: 1.5em;
+        padding: 0.2em;
+        margin: 0 0.3em;
+        cursor: pointer;
+      }
+      #time {
+        position: absolute;
+        color: #fff;
+        right: 5%;
+        top: 4%;
+        font-size: 1.4em;
+      }
+      #title {
+        text-align: center;
+      }
+      #title > svg {
+        font-size: 2.2em;
+      }
+      section {
+        padding: 2vh;
+      }
+      section .container {
+        display: flex;
+        height: calc(100vh - 16vh);
+      }
+      .table {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        margin: 0 1vh;
+        box-sizing: border-box;
+        border-top: #333 solid;
+        border-right: #333 solid;
+      }
+      .table div {
+        display: flex;
+      }
+      .table-header {
+        flex: 3;
+        background-color: rgba(255, 255, 255, 0.6);
+        border-bottom: #333 solid;
+        font-weight: bolder;
+        font-size: 1.4em;
+      }
+      .table-header > div {
+        align-items: center;
+        justify-content: center;
+        border-left: #333 solid;
+      }
+      .table-row {
+        flex: 2;
+        background-color: rgba(255, 255, 255, 0.6);
+        border-bottom: #333 solid;
+        font-size: 1.2em;
+      }
+      .table-row > div {
+        align-items: center;
+        justify-content: center;
+        border-left: #333 solid;
+      }
+      .table .cell {
+        margin: 0 0.5em;
+      }
+      .table-row svg {
+        font-size: 1.5em;
+      }
+
+      #driver {
+        width: 70%;
+        min-width: 100vh;
+        margin: 0 auto;
+      }
+      .pointer {
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="bg-box"></div>
+    <div id="custom-page"></div>
+    <header>
+      <div style="flex: 1">
+        <div id="control">
+          <button onclick="switchPage(-1)">上一张</button>
+          <button onclick="switchPage()">下一张</button>
+          <button>轮&nbsp;&nbsp;&nbsp;&nbsp;播</button>
+        </div>
+        <div id="time"></div>
+        <h1 id="title"></h1>
+      </div>
+    </header>
+    <section>
+      <div id="vehicle" class="container">
+        <div class="table">
+          <div class="table-header">
+            <div style="flex: 1">序号</div>
+            <div style="flex: 3">车型</div>
+            <div style="flex: 2">车牌</div>
+            <div style="flex: 1">执勤</div>
+            <div style="flex: 1">待命</div>
+            <div style="flex: 1">在修</div>
+          </div>
+        </div>
+        <div class="table">
+          <div class="table-header">
+            <div style="flex: 1">序号</div>
+            <div style="flex: 3">车型</div>
+            <div style="flex: 2">车牌</div>
+            <div style="flex: 1">执勤</div>
+            <div style="flex: 1">待命</div>
+            <div style="flex: 1">在修</div>
+          </div>
+        </div>
+      </div>
+      <div id="driver" class="container">
+        <div class="table">
+          <div class="table-header">
+            <div style="flex: 1">序号</div>
+            <div style="flex: 2">姓名</div>
+            <div style="flex: 1">在位</div>
+            <div style="flex: 1">休假</div>
+            <div style="flex: 1">出差</div>
+            <div style="flex: 1">学习</div>
+            <div style="flex: 1">保障</div>
+            <div style="flex: 1">帮工</div>
+            <div style="flex: 1">其他</div>
+          </div>
+        </div>
+      </div>
+      <div id="flag" class="container">
+        <div class="table">
+          <div class="table-header">
+            <div style="flex: 2"></div>
+            <div style="flex: 1">1月</div>
+            <div style="flex: 1">2月</div>
+            <div style="flex: 1">3月</div>
+            <div style="flex: 1">4月</div>
+            <div style="flex: 1">5月</div>
+            <div style="flex: 1">6月</div>
+            <div style="flex: 1">7月</div>
+            <div style="flex: 1">8月</div>
+            <div style="flex: 1">9月</div>
+            <div style="flex: 1">10月</div>
+            <div style="flex: 1">11月</div>
+            <div style="flex: 1">12月</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <script src="./参数设置.js"></script>
+    <script>
+      const FLAG_ICON =
+        '<svg t="1693127982321" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1610" width="1em"><path d="M64 64v960h128v-384h256l128 128h384V192H576L448 64H64z" fill="#F04925" p-id="1611"></path></svg>';
+      const 车辆动态牌 =
+        '<svg height="1em" viewBox="0 0 270 54" xmlns="http://www.w3.org/2000/svg"><text fill="red" x="2.5" y="40.64815" id="svg_1" font-size="36" font-family="Noto Sans JP" text-anchor="start" xml:space="preserve" font-weight="bold" paint-order="stroke" stroke-width="5" stroke-linejoin="round" stroke="#ffffff">车  辆  动  态  牌</text></svg>';
+      const 驾驶员动态牌 =
+        '<svg height="1em" viewBox="0 0 350 54" xmlns="http://www.w3.org/2000/svg"><text fill="red" x="2.5" y="40.64815" id="svg_1" font-size="36" font-family="Noto Sans JP" text-anchor="start" xml:space="preserve" font-weight="bold" paint-order="stroke" stroke-width="5" stroke-linejoin="round" stroke="#ffffff">驾  驶  员  动  态  牌</text></svg>';
+      const 红旗驾驶员 =
+        '<svg height="1em" viewBox="0 0 270 54" xmlns="http://www.w3.org/2000/svg"><text fill="red" x="2.5" y="40.64815" id="svg_1" font-size="36" font-family="Noto Sans JP" text-anchor="start" xml:space="preserve" font-weight="bold" paint-order="stroke" stroke-width="5" stroke-linejoin="round" stroke="#ffffff">红  旗  驾  驶  员</text></svg>';
+    </script>
+    <script>
+      const renderHeader = (title, showId) => {
+        document.getElementById("title").innerHTML = title;
+        document.getElementById("time").innerHTML =
+          new Date()
+            .toLocaleDateString()
+            .replace("/", "年")
+            .replace("/", "月") + "日";
+        document
+          .querySelectorAll(".container")
+          .forEach((item) => (item.style.display = "none"));
+        document.getElementById("custom-page").style.display = "none";
+        document.getElementById(showId).style.display = "";
+      };
+
+      /*********************** 车辆动态牌 *************************/
+
+      const renderVehicle = () => {
+        renderHeader(车辆动态牌, "vehicle");
+        document
+          .querySelectorAll("#vehicle .table-row")
+          .forEach((item) => item.remove());
+        const vehicleTables = document.querySelectorAll("#vehicle .table");
+
+        for (let i = 0; i < Math.ceil(config.vehicles.length / 2) * 2; i++) {
+          const dataVehicle = localStorage.dataVehicle?.split(",") || [];
+          const row = document.createElement("div");
+          row.className = "table-row";
+          let innerHTML = `
+              <div style="flex: 1;font-weight: bold">
+                <div class="cell">${i + 1}</div>
+              </div>
+              <div style="flex: 3; justify-content: start; font-size: 0.9em">
+                <div class="cell">${config.vehicles[i]?.name || ""}</div>
+              </div>
+              <div style="flex: 2;font-weight: bold">
+                <div class="cell">${config.vehicles[i]?.number || ""}</div>
+              </div>
+            `;
+          for (let j = 0; j < 3; j++) {
+            innerHTML += `
+              <div class="pointer" style="flex: 1" data-vehicle="${i}" data-index="${j}">
+                ${dataVehicle[i] === `${j}` ? FLAG_ICON : ""}
+              </div>`;
+          }
+          row.innerHTML = innerHTML;
+          vehicleTables[i <= config.vehicles.length / 2 ? 0 : 1].append(row);
+        }
+
+        document.getElementById("vehicle").onclick = (e) => {
+          let target = e.target;
+          if (target.tagName === "svg") {
+            target = target.parentElement;
+          }
+          if (target.tagName === "path") {
+            target = target.parentElement.parentElement;
+          }
+          if (target.dataset.vehicle) {
+            const dataVehicle = localStorage.dataVehicle?.split(",") || [];
+            dataVehicle[parseInt(target.dataset.vehicle)] =
+              dataVehicle[parseInt(target.dataset.vehicle)] ===
+              target.dataset.index
+                ? ""
+                : target.dataset.index;
+            localStorage.dataVehicle = dataVehicle;
+            renderVehicle();
+          }
+        };
+      };
+
+      /*********************** 驾驶员动态牌 *************************/
+
+      const renderDriver = () => {
+        renderHeader(驾驶员动态牌, "driver");
+        document
+          .querySelectorAll("#driver .table-row")
+          .forEach((item) => item.remove());
+        const driverTable = document.querySelector("#driver .table");
+
+        for (let i = 0; i < config.drivers.length; i++) {
+          const dataDriver = localStorage.dataDriver?.split(",") || [];
+          const row = document.createElement("div");
+          row.className = "table-row";
+          let innerHTML = `
+              <div style="flex: 1;font-weight: bold">
+                <div class="cell">${i + 1}</div>
+              </div>
+              <div style="flex: 2">
+                <div class="cell">${config.drivers[i]}</div>
+              </div>
+            `;
+          for (let j = 0; j < 7; j++) {
+            innerHTML += `
+              <div class="pointer" style="flex: 1" data-driver="${i}" data-index="${j}">
+                ${dataDriver[i] === `${j}` ? FLAG_ICON : ""}
+              </div>`;
+          }
+          row.innerHTML = innerHTML;
+          driverTable.append(row);
+        }
+
+        document.getElementById("driver").onclick = (e) => {
+          let target = e.target;
+          if (target.tagName === "svg") {
+            target = target.parentElement;
+          }
+          if (target.tagName === "path") {
+            target = target.parentElement.parentElement;
+          }
+          if (target.dataset.driver) {
+            const dataDriver = localStorage.dataDriver?.split(",") || [];
+            dataDriver[parseInt(target.dataset.driver)] =
+              dataDriver[parseInt(target.dataset.driver)] ===
+              target.dataset.index
+                ? ""
+                : target.dataset.index;
+            localStorage.dataDriver = dataDriver;
+            renderDriver();
+          }
+        };
+      };
+
+      /*********************** 红旗驾驶员 *************************/
+
+      const renderFlag = () => {
+        renderHeader(红旗驾驶员, "flag");
+        document
+          .querySelectorAll("#flag .table-row")
+          .forEach((item) => item.remove());
+        const flagTable = document.querySelector("#flag .table");
+
+        for (let i = 0; i < config.drivers.length; i++) {
+          const dataFlag = localStorage.dataFlag?.split(",") || [];
+          const row = document.createElement("div");
+          row.className = "table-row";
+          let innerHTML = `
+              <div style="flex: 2">
+                <div class="cell">${config.drivers[i]}</div>
+              </div>
+            `;
+          for (let j = 0; j < 12; j++) {
+            innerHTML += `
+              <div class="pointer" style="flex: 1" data-flag="${i}" data-index="${j}">
+                ${dataFlag[j] === `${i}` ? FLAG_ICON : ""}
+              </div>`;
+          }
+          row.innerHTML = innerHTML;
+          flagTable.append(row);
+        }
+
+        document.getElementById("flag").onclick = (e) => {
+          let target = e.target;
+          if (target.tagName === "svg") {
+            target = target.parentElement;
+          }
+          if (target.tagName === "path") {
+            target = target.parentElement.parentElement;
+          }
+          if (target.dataset.flag) {
+            const dataFlag = localStorage.dataFlag?.split(",") || [];
+            dataFlag[parseInt(target.dataset.index)] =
+              dataFlag[parseInt(target.dataset.index)] === target.dataset.flag
+                ? ""
+                : target.dataset.flag;
+            localStorage.dataFlag = dataFlag;
+            renderFlag();
+          }
+        };
+      };
+
+      /*********************** 自定义图片 ************************/
+
+      const renderCustomPage = (url) => {
+        document.getElementById(
+          "custom-page"
+        ).style.backgroundImage = `url('${url}')`;
+        document.getElementById("custom-page").style.display = "";
+      };
+
+      /*********************** 轮播逻辑 *************************/
+
+      renderVehicle();
+
+      const playList = [
+        renderVehicle,
+        renderDriver,
+        renderFlag,
+        ...config.customPage.map((page) => () => renderCustomPage(page)),
+      ];
+      const playButton = document.querySelector("#control").children[2];
+
+      let playIndex = 0;
+      const switchPage = (step) => {
+        playButton.style.display = "none";
+        playIndex += step || 1;
+        if (playIndex > playList.length - 1) playIndex = 0;
+        if (playIndex < 0) playIndex = playList.length - 1;
+        playList[playIndex]();
+      };
+
+      let timer1 = setInterval(switchPage, config.play.interval * 1000);
+      let timer2;
+      const startPlay = () => {
+        switchPage();
+        timer1 = setInterval(switchPage, config.play.interval * 1000);
+      };
+      playButton.onclick = (e) => {
+        e.stopPropagation();
+        clearTimeout(timer2);
+        startPlay();
+      };
+      document.addEventListener("click", () => {
+        clearInterval(timer1);
+        clearTimeout(timer2);
+        playButton.style.display = "";
+        timer2 = setTimeout(startPlay, config.play.clickDelay * 1000);
+      });
+    </script>
+  </body>
+</html>
